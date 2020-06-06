@@ -262,6 +262,7 @@ class FlipThrough {
                     ${(this.clickP - this.left) < this.half ? 
                         'w-resize' : 'e-resize'}`
         }
+        this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/lowRes/f${this.currentPgNum}.jpg`);
         this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`);
     }
     hover() {
