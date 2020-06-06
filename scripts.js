@@ -4,7 +4,6 @@ class Slide {
             document.querySelectorAll('.holder .page'))
         this.current = 0;
         this.currentPg = () => this.pgList[this.current]
-        this.obstruct = false;
         this.entered;
         this.adjustCallback = {
             page: {
@@ -40,10 +39,6 @@ class Slide {
     }
     change(increment) {
         if (this.current == 0 && increment < 0) return;
-        if (slide.obstruct) {
-            this.obstruct = false;
-            return
-        }
         this.current += increment;
         for (const obj in this.adjustCallback) {
             this.adjust(this.adjustCallback[obj]);
@@ -145,7 +140,7 @@ class Events {
                     if (e.target.classList.contains('ft') && !currentFt.flipped) {
                         currentFt.startFlip();
                     } else {
-                        currentFt.remind();
+                        if (currentFt.remind()) prevent = true;
                     }
                 }
                 if (e.target.classList.contains('prevent-click')) {
@@ -230,26 +225,55 @@ class Events {
 class FlipThrough {
     constructor(ftNum, lastPage) {
         this.pcNum = `pc${ftNum}`
+        this.lastPage = lastPage;
         this.dom = document.getElementById(`${this.pcNum}-ft`);
         this.flipped;
         this.reminded;
         this.currentPgNum = 1;
-        this.lastPage = lastPage;
+
     }
     remind() {
         if (!this.flipped && !this.reminded) {
             slide.display(`#${this.pcNum}-arrow_l`, 'none')
             slide.display(`#${this.pcNum}-reminder`, 'block')
             this.reminded = true;
-            slide.obstruct = true
+            return true;
         }
     }
     startFlip() {
+        slide.display(`#${this.pcNum}-arrow_l`, 'none');
+        slide.display(`#${this.pcNum}-reminder`, 'none');
+        this.dom.style.transform = 'rotate(0)';
         this.flip(1);
-        const left = () => this.dom.getBoundingClientRect().left;
-        const right = () => this.dom.getBoundingClientRect().right;
-        const half = () => (right() - left()) / 2
-        const position = e => (e.pageX - left()) < half();
+        this.flipped = true;
+        this.cursor();
+    }
+    flip(direction) {
+        if (!(direction < 0 &&
+                this.currentPgNum == 1) && !(direction > 0 &&
+                this.currentPgNum == this.lastPage)) {
+            this.currentPgNum += direction
+        }
+        if (this.pcNum == 'pc3') {
+            this.dom.style.cursor =
+                `-webkit-image-set(url(cursor/${
+                        (this.clickP - this.left) < this.half ? 'prev' : 'next'
+                    }_${!!this.blue.find(n => n == this.currentPgNum) ? 'bl' : 'yt'}.svg) 2.5x) 20 20,
+                    ${(this.clickP - this.left) < this.half ? 
+                        'w-resize' : 'e-resize'}`
+        }
+        if (this.pcNum == 'pc6') this.frenchFold();
+        this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/lowRes/f${this.currentPgNum}.jpg`);
+        loading('flex')
+        const src = `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`;
+        resolution(this.dom, () => this.dom.setAttribute('src', src),
+            this.dom.complete, 'onload')
+    }
+    cursor() {
+        const left = () => this.dom.getBoundingClientRect().left,
+            right = () => this.dom.getBoundingClientRect().right,
+            half = () => (right() - left()) / 2,
+            position = e => (e.pageX - left()) < half();
         this.dom.addEventListener('click', e => {
             if (this.pcNum == 'pc3') {
                 this.clickP = e.pageX;
@@ -268,41 +292,6 @@ class FlipThrough {
                     'w-resize' : 'e-resize'}`;
         })
     }
-    flip(direction) {
-        slide.display(`#${this.pcNum}-arrow_l`, 'none');
-        slide.display(`#${this.pcNum}-reminder`, 'none');
-        this.flipped = true;
-        slide.obstruct = false;
-        this.dom.style.transform = `rotate(${
-            this.currentPgNum == 1 ? 0 : 20})`
-        if (!(direction < 0 &&
-                this.currentPgNum == 1) && !(direction > 0 &&
-                this.currentPgNum == this.lastPage)) {
-            this.currentPgNum += direction
-        }
-        if (this.pcNum == 'pc6') {
-            this.frenchFold();
-        }
-        if (this.pcNum == 'pc3') {
-            this.dom.style.cursor =
-                `-webkit-image-set(url(cursor/${
-                        (this.clickP - this.left) < this.half ? 'prev' : 'next'
-                    }_${!!this.blue.find(n => n == this.currentPgNum) ? 'bl' : 'yt'}.svg) 2.5x) 20 20,
-                    ${(this.clickP - this.left) < this.half ? 
-                        'w-resize' : 'e-resize'}`
-        }
-        this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/lowRes/f${this.currentPgNum}.jpg`);
-        slide.display('.loading', 'flex')
-        if (this.dom.complete) {
-            this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`)
-            slide.display('.loading', 'none')
-        } else {
-            this.dom.onload = () => {
-                this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`)
-                slide.display('.loading', 'none')
-            }
-        }
-    }
     hover() {
         const dom = $(`#${this.pcNum}-ft`);
         dom.hover(() => {
@@ -318,13 +307,14 @@ class FlipThrough {
 }
 
 const slide = new Slide(),
-    flipThrough = new FlipThrough();
-//flipThrough
-const ft = {
+    flipThrough = new FlipThrough(),
+
+    //flipThrough
+    ft = {
         pc1,
         pc3,
         pc6
-};
+    },
     ftPc = [1, 3, 6],
     pageAmt = [116, 44, 39]
 for (let i = 0; i < 3; i++) {
