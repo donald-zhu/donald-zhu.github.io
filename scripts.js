@@ -61,7 +61,7 @@ class Slide {
             if (!validation) {
                 return
             } else {
-                arg = [null,null]
+                arg = [null, null]
             }
         }
         this[obj.className](...arg);
@@ -392,31 +392,26 @@ function resolution(img, callback, complete, load) {
         check(loading)
     })
 }
-
 function pc4Cursor() {
     if (slide.currentPg().parentElement.id == 'pc4' &&
-        slide.currentPg().classList.contains('image')) {
-        if (!pc4Cursor.int) {
-            pc4Cursor.n = 1;
-            pc4Cursor.changeCursor = () => {
-                const style = `-webkit-image-set(url(pc4/${pc4Cursor.n}.svg) 2x) 5 5, auto`
-                document.querySelector('body').style.cursor = style;
-                cursorHelper = false;
-            }
-            pc4Cursor.changeCursor();
-            pc4Cursor.int = setInterval(() => {
-                pc4Cursor.n += 1;
-                if (pc4Cursor.n > 17) {
-                    pc4Cursor.n = 1;
-                }
-                pc4Cursor.changeCursor()
-            }, 1000)
-        }
+        slide.currentPg().classList.contains('image') &&
+        !pc4Cursor.int) {
+        pc4Cursor.n = 1;
+        pc4Change()
+        pc4Cursor.int = setInterval(() => {
+            pc4Cursor.n = pc4Cursor.n <= 17 ? (pc4Cursor.n + 1) : 1;
+            pc4Change()
+        }, 1000)
     } else {
         clearInterval(pc4Cursor.int);
         pc4Cursor.int = null;
-        cursorHelper = true
+        cursorHelper = true;
     }
+}
+function pc4Change() {
+    const style = `-webkit-image-set(url(pc4/${pc4Cursor.n}.svg) 2x) 5 5, auto`
+    document.querySelector('body').style.cursor = style;
+    cursorHelper = false;
 }
 
 collection.pc6.frenchFold = function () {
