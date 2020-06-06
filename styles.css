@@ -53,6 +53,26 @@ p {
     z-index: 999;
 }
 
+.loading {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    pointer-events: none;
+}
+
+.loading-text {
+    width: 18vw;
+    height: 13vh;
+    margin: 0;
+    padding: 0;
+    z-index: 999;
+    pointer-events: none;
+}
+
 .title-page {
     z-index: 9999;
 }
@@ -94,6 +114,10 @@ video {
     right: 15vw;
     z-index: 99999;
     transform: rotate(-30deg);
+}
+
+.loading {
+    z-index: 9999999;
 }
 
 :-webkit-full-screen #ff-text {
@@ -151,7 +175,8 @@ video {
 
 img,
 video,
-.fullscreen {
+.fullscreen,
+.loading-text {
     user-select: none;
 }
 
@@ -164,6 +189,7 @@ video,
 .end-page div p,
 .page,
 .fullscreen,
+.loading,
 .image img,
 video {
     position: fixed;
@@ -182,6 +208,7 @@ video {
 }
 
 .page,
+.loading,
 :-webkit-full-screen .fullscreen,
 .ft-reminder,
 #ff-text {
@@ -271,7 +298,8 @@ body {
     font-size: 50%;
 }
 
-.fullscreen {
+.fullscreen,
+.loading-text {
     font-size: 50%;
     text-align: center;
 }
@@ -289,6 +317,7 @@ body {
 .heading p,
 .pc-title,
 .fullscreen,
+.loading-text,
 .text .caption,
 .enter p:active,
 .restart p:active,
@@ -310,6 +339,7 @@ body {
 .end-page {
     cursor: -webkit-image-set(url(cursor/prev_yt.svg) 2.5x) 5 5, auto;
 }
+
 .enter p:hover {
     cursor: -webkit-image-set(url(cursor/next_yt.svg) 2.5x) 5 5, pointer;
 }

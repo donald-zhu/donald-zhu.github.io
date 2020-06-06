@@ -70,22 +70,34 @@ class Slide {
                 }
                 const imgNum = arr.findIndex(n => n === this.currentPg()) + 1,
                     src = `images/${id}/hiRes/${imgNum}.jpg`;
+                    if (!this.currentPg().classList.contains('ft-holder')) {
+                        this.display('.loading', 'flex')
+                    }
+                    console.log(document.querySelector('.loading').style.display)
                 if (img.complete &&
                     img.getAttribute !== src &&
                     imgNum !== 0) {
                     img.setAttribute('src', src)
-                }
+                    this.display('.loading', 'none')
+                } else if (img.getAttribute !== src &&
+                    imgNum !== 0) {
+                        img.onload = () => img.setAttribute('src', src)
+                        this.display('.loading', 'flex')
+                    }
             }
         }
     }
     videoPlay() {
         if (this.currentPg().classList.contains('video')) {
             const vid = this.currentPg().querySelector('video');
+            this.display('.loading','flex')
             if (vid.readyState == 4) {
+                this.display('.loading','none')
                 vid.currentTime = 1;
                 vid.play();
             } else {
                 vid.oncanplaythrough = () => {
+                    this.display('.loading','none')
                     vid.currentTime = 1;
                     vid.play();
                 }
@@ -283,11 +295,15 @@ class FlipThrough {
                         'w-resize' : 'e-resize'}`
         }
         this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/lowRes/f${this.currentPgNum}.jpg`);
+        slide.display('.loading', 'flex')
+        console.log(document.querySelector('.loading').style.display)
         if (this.dom.complete) {
             this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`)
+            slide.display('.loading', 'none')
         } else {
             this.dom.onload = () => {
                 this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`)
+                slide.display('.loading', 'none')
             }
         }
     }
@@ -323,7 +339,6 @@ for (let i = 0; i < 3; i++) {
 }
 collection.pc3.blue = [2, 3, 5, 9, 11, 13, 15, 19, 27, 37, 38, 39, 40, 41];
 evthandler.initialize();
-
 function pc4Cursor() {
     if (slide.currentPg().parentElement.id == 'pc4' &&
         slide.currentPg().classList.contains('image')) {
@@ -359,21 +374,23 @@ collection.pc6.frenchFold = function () {
         '5vw' : '10vw') : '';
     this.ff.style.right = this.fullscreen() ? '5vw' : '10vw';
     this.ff.style.display = this.match() ? 'block' : 'none';
-    let to;
+    slide.display('.loading', 'flex')
+    console.log(document.querySelector('.loading').style.display)
     if (this.match()) {
         const i = this.index.findIndex(elem => elem == this.currentPgNum);
         this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/lowRes/ff${i + 1}.jpg`)
         if (this.ff.complete) {
             this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
+            slide.display('.loading', 'none')
         } else {
             this.ff.onload = () => this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`);
+            slide.display('.loading', 'none')
         }
     }
     document.getElementById('ff-text').style.display = this.match() ? 'block' : 'none';
 }
 
 slide.display('.fullscreen', 'none');
-
 $.fn.preload = function () {
     this.each(function () {
         $('<img/>')[0].src = this;
