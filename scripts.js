@@ -170,23 +170,15 @@ class Events {
                         collection[pcNum].remind();
                     }
                 }
-                if (e.target.tagName == 'VIDEO' ||
-                    e.target.classList.contains('ft') ||
-                    e.target.classList.contains('fullscreen') ||
-                    e.target == document.querySelector('#pc2 .image img') ||
-                    e.target == document.querySelector('#pc2text .text-indent') ||
-                    e.target == document.querySelector('.instagram')) {
-                    e.stopPropagation();
+                if (e.target.classList.contains('prevent-click')) {
                     ft = true
                 }
-                if (slide.entered && !ft &&
-                    !slide.currentPg().classList.contains('endpage')) {
+                if (slide.entered && !ft) {
                     slide.change(windowPosition(e) ?
                         -1 : 1)
                 } else if (slide.currentPg().classList.contains('endpage')) {
                     slide.change(-1)
                 }
-
             }],
             ['.fullscreen', this.fullscreen],
             ['#video-1', () => {
@@ -392,6 +384,7 @@ function resolution(img, callback, complete, load) {
         check(loading)
     })
 }
+
 function pc4Cursor() {
     if (slide.currentPg().parentElement.id == 'pc4' &&
         slide.currentPg().classList.contains('image') &&
@@ -408,6 +401,7 @@ function pc4Cursor() {
         cursorHelper = true;
     }
 }
+
 function pc4Change() {
     const style = `-webkit-image-set(url(pc4/${pc4Cursor.n}.svg) 2x) 5 5, auto`
     document.querySelector('body').style.cursor = style;
