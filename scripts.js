@@ -105,10 +105,7 @@ class Slide {
             if (!cp().classList.contains('ft-holder')) {
                 loading('show')
             }
-            const callback = () => {
-                img.setAttribute('src', src);
-            }
-            resolution(img, callback, img.complete, 'onload')
+            resolution(img, src)
         }
     }
     video() {
@@ -266,8 +263,7 @@ class FlipThrough {
         this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/lowRes/f${this.currentPgNum}.jpg`);
         loading('flex')
         const src = `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`;
-        resolution(this.dom, () => this.dom.setAttribute('src', src),
-            this.dom.complete, 'onload')
+        resolution(this.dom, src)
     }
     cursor() {
         const left = () => this.dom.getBoundingClientRect().left,
@@ -308,25 +304,7 @@ class FlipThrough {
 
 const slide = new Slide(),
     flipThrough = new FlipThrough(),
-
-    //flipThrough
-    ft = {
-        pc1,
-        pc3,
-        pc6
-    },
-    ftPc = [1, 3, 6],
-    pageAmt = [116, 44, 39]
-for (let i = 0; i < 3; i++) {
-    ft[`pc${ftPc[i]}`] = new FlipThrough(ftPc[i], pageAmt[i]);
-    ft[`pc${ftPc[i]}`].hover()
-}
-ft.pc3.blue = [2, 3, 5, 9, 11, 13, 15, 19, 27, 37, 38, 39, 40, 41];
-
-const evthandler = new Events();
-evthandler.initialize();
-
-const chldnH = (parent) => {
+    chldnH = (parent) => {
         const top = parent.firstElementChild.getBoundingClientRect().top,
             bottom = parent.lastElementChild.getBoundingClientRect().bottom;
         return bottom - top
@@ -338,6 +316,12 @@ const chldnH = (parent) => {
     hasClass = className => cp().classList.contains(className);
 
 function resolution(img, callback, complete, load) {
+    if (!complete) complete = img.complete;
+    if (!load) load = 'onload';
+    if (typeof callback == 'string') {
+        const src = callback;
+        callback = () => img.setAttribute('src', src)
+    }
     const check = cb => {
         if (complete) {
             cb()
@@ -374,29 +358,40 @@ function pc4Change() {
     cursorHelper = false;
 }
 
+//flipThrough
+const ft = {
+        pc1,
+        pc3,
+        pc6
+    },
+    ftPc = [1, 3, 6],
+    pageAmt = [116, 44, 39]
+for (let i = 0; i < 3; i++) {
+    ft[`pc${ftPc[i]}`] = new FlipThrough(ftPc[i], pageAmt[i]);
+    ft[`pc${ftPc[i]}`].hover()
+}
+ft.pc3.blue = [2, 3, 5, 9, 11, 13, 15, 19, 27, 37, 38, 39, 40, 41];
+ft.pc6.index = [7, 8, 9, 11, 12, 13, 14, 15, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 37, 38];
 ft.pc6.frenchFold = function () {
-    this.index = [7, 8, 9, 11, 12, 13, 14, 15, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 37, 38];
-    this.ff = document.getElementById('ff');
-    this.fullscreen = () => window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height);
-    this.match = () => !!this.index.find(elem => elem == this.currentPgNum);
-    this.dom.style.left = this.match() ? (this.fullscreen() ?
+    const ff = document.getElementById('ff'),
+        fullscreen = () => window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height),
+        match = () => !!this.index.find(elem => elem == this.currentPgNum);
+    this.dom.style.left = match() ? (fullscreen() ?
         '5vw' : '10vw') : '';
-    this.ff.style.right = this.fullscreen() ? '5vw' : '10vw';
-    this.ff.style.display = this.match() ? 'block' : 'none';
-    slide.display('.loading', 'flex')
-    if (this.match()) {
-        const i = this.index.findIndex(elem => elem == this.currentPgNum);
-        this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/lowRes/ff${i + 1}.jpg`)
-        if (this.ff.complete) {
-            this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
-            slide.display('.loading', 'none')
-        } else {
-            this.ff.onload = () => this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`);
-            slide.display('.loading', 'none')
-        }
+    ff.style.right = fullscreen() ? '5vw' : '10vw';
+    ff.style.display = match() ? 'block' : 'none';
+    if (match()) {
+        loading('flex')
+        const i = this.index.findIndex(elem => elem == this.currentPgNum),
+            hiResSrc = `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`;
+        ff.setAttribute('src', `images/pc6/fullbook/frenchFold/lowRes/ff${i + 1}.jpg`)
+        resolution(ff, hiResSrc)
     }
     document.getElementById('ff-text').style.display = this.match() ? 'block' : 'none';
 }
+
+const evthandler = new Events();
+evthandler.initialize();
 
 slide.display('.fullscreen', 'none');
 $.fn.preload = function () {
