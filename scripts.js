@@ -395,27 +395,46 @@ evthandler.initialize();
 
 slide.display('.fullscreen', 'none');
 
-function load(srcArr, total) {
-    let numLoaded = 0;
+let numLoaded = 0;
+
+function load(srcArr, srcObjList, next) {
     for (let i = 0; i < srcArr.length; i++) {
         const src = srcArr[i];
         const img = new Image();
         img.src = src;
-        console.log(`${img.src.replace('http://127.0.0.1:5500/', '')}`)
+        srcObjList.push(img);
+    }
+    for (let i = 0; i < srcObjList.length; i++) {
+        const obj = srcObjList[i]
+        const log = () => {
+            numLoaded += 1;
+            if (numLoaded == srcObjList.length) {
+                console.log(`loaded ${srcObjList.length} resources`);
+                numLoaded = 0;
+                if(next) next()
+            }
+        }
+        if (obj.complete) {
+            log()
+        } else {
+            log()
+        }
     }
 }
 const cursorArr = [
-    'cursor/auto_yt.svg', 'cursor/next_yt.svg',
-    'cursor/prev_clr.svg', 'cursor/next_clr.svg'
-];
-load(cursorArr, 4)
+        'cursor/auto_yt.svg', 'cursor/next_yt.svg',
+        'cursor/prev_clr.svg', 'cursor/next_clr.svg'
+    ],
+    cursorObjList = [];
 
-const ffArr = [];
+const ffArr = [],
+    ffObjList = [];
 for (let i = 0; i < 3; i++) {
     const n = ftPc[i]
     for (let ii = 0; ii < pageAmt[i]; ii++) {
         ffArr.push(`images/pc${n}/fullbook/f${ii + 1}.jpg`)
     }
     ffArr.push(`images/pc${n}/fullbook/f1_hover.jpg`);
-}
-load(ffArr, 119)
+};
+const loadFf = () => load(ffArr, ffObjList)
+load(cursorArr, cursorObjList, loadFf);
