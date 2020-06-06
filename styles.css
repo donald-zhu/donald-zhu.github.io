@@ -1,0 +1,342 @@
+body {
+    color: white;
+    background-color: #e8968b;
+}
+
+p {
+    user-select: none;
+}
+
+.page {
+    width: 100vw;
+    top: 0;
+    left: 0;
+}
+
+.pc-title {
+    width: 90%;
+    margin: 10vh 5vw 0;
+}
+
+:-webkit-full-screen .pc-title {
+    margin-top: 20vh;
+}
+
+.text-indent {
+    margin: 0 10vw 0 22.5vw;
+    text-align: right;
+    text-indent: -10vw;
+}
+
+.text .caption {
+    width: 70%;
+    padding: 10vh 5vw 20vh;
+}
+
+:-webkit-full-screen .text .caption {
+    padding-top: 15vh;
+}
+
+.image {
+    align-items: center;
+    justify-content: center;
+}
+
+.fullscreen {
+    width: 18vw;
+    height: 13vh;
+    margin: 0;
+    padding: 0;
+    bottom: 4.5vw;
+    right: 5vw;
+    border-bottom: 0.07em solid #e8968b;
+    z-index: 999;
+}
+
+.title-page {
+    z-index: 9999;
+}
+
+body,
+.page,
+.title-page,
+.end-page,
+.image img,
+video {
+    height: 100vh;
+}
+
+.ft-reminder {
+    height: 2.5vw;
+    top: 7.5vh;
+    right: 7.5vw;
+}
+
+:-webkit-full-screen .ft-reminder {
+    top: 30vh;
+}
+
+.ft {
+    z-index: 9999;
+    height: 75% !important;
+    transform: rotate(20deg);
+}
+
+#ff {
+    right: 5vw;
+    z-index: 9999;
+    height: 75% !important;
+    display: none;
+}
+
+#ff-text {
+    top: -1vh;
+    right: 15vw;
+    z-index: 99999;
+    transform: rotate(-30deg);
+}
+
+:-webkit-full-screen #ff-text {
+    top: 0vh;
+}
+
+.arrow_l {
+    border: none !important;
+    height: 5vw;
+    top: -25vh;
+    right: 15vw;
+}
+
+.image img,
+.ft-holder img {
+    border: 0.1vw solid black;
+}
+
+:-webkit-full-screen .arrow_l {
+    right: 12.5vw;
+}
+
+#pc2 .image {
+    flex-direction: column;
+    align-items: center;
+}
+
+#pc2 .image img {
+    margin-top: 5vh;
+    height: auto;
+}
+
+#pc2 .image img,
+#pc2text .text-indent {
+    width: 75vw;
+}
+
+#pc2text {
+    height: 15vh;
+}
+
+#pc2text .text-indent {
+    top: -3vh;
+    left: 0;
+    margin-left: 12.5vw;
+    text-decoration: underline;
+}
+
+#pc2text .text-indent img {
+    width: 1em;
+    margin-top: 0;
+    padding-right: 1vw;
+    border: none;
+}
+
+img,
+video,
+.fullscreen {
+    user-select: none;
+}
+
+.ft-reminder,
+#ff-text {
+    position: absolute;
+}
+
+.title-page div p,
+.end-page div p,
+.page,
+.fullscreen,
+.image img,
+video {
+    position: fixed;
+}
+
+.text,
+.text-indent,
+#pc2 .image img,
+#pc2text .text-indent {
+    position: relative;
+}
+
+.image,
+#pc2text .text-indent {
+    display: flex;
+}
+
+.page,
+:-webkit-full-screen .fullscreen,
+.ft-reminder,
+#ff-text {
+    display: none;
+}
+
+body,
+.title-page div p,
+.end-page div p,
+.text p,
+.page {
+    margin: 0;
+}
+
+.heading p {
+    padding-left: 5vw;
+    top: calc(15vh + 10px);
+}
+
+.enter p,
+.restart p {
+    bottom: calc(15vh + 10px);
+    left: 5vw;
+    border-bottom: 0.05em solid white;
+}
+
+.enter p {
+    width: 18vw;
+    padding: 0 0 0.03em;
+}
+
+.restart p {
+    width: 40vw;
+    height: 15vh;
+    padding: 0 0 0.1em;
+}
+
+:-webkit-full-screen .restart p {
+    height: 13vh;
+    padding: 0 0 0.03em;
+}
+
+.instagram p {
+    bottom: calc(15vh + 10px);
+    right: 10vw;
+    height: 15vh;
+    width: 2.5vw;
+}
+
+:-webkit-full-screen .instagram p {
+    height: 13vh;
+}
+
+/* typography */
+body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 10vw;
+    line-height: 0.9em;
+    letter-spacing: -0.2vw;
+}
+
+.text .caption {
+    font-size: 50%;
+    line-height: 1em;
+    letter-spacing: -0.1vw;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+.title-text p {
+    /* font-size: 7.5vw */
+    font-size: 72.5%;
+    line-height: 8.5vw;
+}
+
+.enter p {
+    /* font-size: 9vw */
+    font-size: 90%;
+}
+
+.restart p {
+    font-size: 80%;
+}
+
+.instagram p {
+    font-size: 50%;
+}
+
+.fullscreen {
+    font-size: 50%;
+    text-align: center;
+}
+
+.ft-reminder {
+    font-size: 30%;
+    letter-spacing: -0.1vw;
+}
+
+#ff-text {
+    font-size: 40%;
+    letter-spacing: -0.1vw;
+}
+
+.heading p,
+.pc-title,
+.fullscreen,
+.text .caption,
+.enter p:active,
+.restart p:active,
+#ff-text {
+    font-style: italic;
+}
+
+#pc2text .text-indent {
+    font-size: 50%;
+    letter-spacing: -0.1vw;
+    font-style: italic;
+}
+
+/* cursor | pseudo */
+.title-page {
+    cursor: -webkit-image-set(url(cursor/auto_yt.svg) 2.5x) 5 5, auto;
+}
+
+.end-page {
+    cursor: -webkit-image-set(url(cursor/prev_yt.svg) 2.5x) 5 5, auto;
+}
+.enter p:hover {
+    cursor: -webkit-image-set(url(cursor/next_yt.svg) 2.5x) 5 5, pointer;
+}
+
+.restart {
+    cursor: -webkit-image-set(url(cursor/replay_yt.svg) 2.5x) 5 5, pointer;
+}
+
+.instagram {
+    cursor: -webkit-image-set(url(cursor/auto_yt.svg) 2.5x) 5 5, pointer;
+}
+
+
+.fullscreen {
+    cursor: -webkit-image-set(url(cursor/auto_clr.svg) 2.5x) 5 5, auto;
+}
+
+.ft,
+#ff {
+    cursor: -webkit-image-set(url(cursor/auto_yt.svg) 2.5x) 5 5, auto;
+}
+
+video {
+    cursor: -webkit-image-set(url(cursor/replay_clr.svg) 2.5x) 5 5, auto;
+}
+
+#pc2 .image img,
+#pc2text .text-indent {
+    cursor: -webkit-image-set(url(cursor/auto_clr.svg) 2.5x) 5 5, pointer;
+}
