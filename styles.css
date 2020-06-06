@@ -80,7 +80,7 @@ p {
 body,
 .page,
 .title-page,
-.end-page,
+.endpage,
 .image img,
 video {
     height: 100vh;
@@ -186,7 +186,7 @@ video,
 }
 
 .title-page div p,
-.end-page div p,
+.endpage div p,
 .page,
 .fullscreen,
 .loading,
@@ -217,7 +217,7 @@ video {
 
 body,
 .title-page div p,
-.end-page div p,
+.endpage div p,
 .text p,
 .page {
     margin: 0;
@@ -336,7 +336,7 @@ body {
     cursor: -webkit-image-set(url(cursor/auto_yt.svg) 2.5x) 5 5, auto;
 }
 
-.end-page {
+.endpage {
     cursor: -webkit-image-set(url(cursor/prev_yt.svg) 2.5x) 5 5, auto;
 }
 

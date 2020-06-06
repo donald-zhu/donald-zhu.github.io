@@ -6,6 +6,28 @@ class Slide {
         this.currentPg = () => this.pgList[this.current]
         this.obstruct = false;
         this.entered;
+        this.adjustCallback = {
+            page: {
+                className: 'page',
+            },
+            text: {
+                className: 'text',
+                matched: ['auto', true],
+                noMatch: ['hidden', false]
+            },
+            image: {
+                className: 'image',
+                not: 'video',
+            },
+            video: {
+                className: 'video'
+            },
+            endpage: {
+                className: 'endpage',
+                matched: [true, 'none'],
+                noMatch: [false, '']
+            }
+        }
     }
     enter() {
         evthandler.fullscreen();
@@ -25,71 +47,83 @@ class Slide {
             return
         }
         this.current += increment;
-        this.displayAdjust();
-        this.captionAdjust()
-        this.imgAdjust();
-        this.videoPlay();
-        this.endpage();
+        for (const obj in this.adjustCallback) {
+            this.adjust(this.adjustCallback[obj]);
+        }
         pc4Cursor();
     }
-    displayAdjust() {
-        this.display(this.currentPg(),
-            this.currentPg().classList.contains('image') ? 'flex' : 'block')
+    adjust(obj) {
+        const validation = obj.not ? (cp().classList.contains(obj.className) &&
+                !cp().classList.contains(obj.not) ? true : false) :
+            (cp().classList.contains(obj.className) ? true : false);
+        let arg = validation ? obj.matched : obj.noMatch;
+        if (!arg) {
+            if (!validation) {
+                return
+            } else {
+                arg = [null,null]
+            }
+        }
+        this[obj.className](...arg);
+    }
+    display(elem, style) {
+        if (typeof elem == 'string') {
+            document.querySelector(elem).style.display = style;
+        } else if (typeof elem == 'object') {
+            elem.style.display = style;
+        }
+    }
+    page() {
+        this.display(cp(),
+            cp().classList.contains('image') ? 'flex' : 'block')
         for (let i = 0; i < this.pgList.length; i++) {
             const page = this.pgList[i];
-            if (i !== this.current) {
+            if (i !== this.current &&
+                page.style.display !== 'none') {
                 this.display(page, 'none')
             }
         }
     }
-    captionAdjust() {
-        const adjust = (overflow, ch) => {
-            document.body.style.overflow = overflow;
-            if (ch) {
-                const top = this.currentPg().firstElementChild.getBoundingClientRect().top,
-                    bottom = this.currentPg().lastElementChild.getBoundingClientRect().bottom;
-                this.currentPg().style.height = `${bottom - top}px`;
-            }
+    text(overflow, captionHeight) {
+        document.body.style.overflow = overflow;
+        if (captionHeight) {
+            const h = chldnH(cp());
+            cp().style.height = h + 'px';
         }
-        this.currentPg().classList.contains('text') ?
-            adjust('auto', true) : adjust('hidden', false)
     }
-    imgAdjust() {
-        if (this.currentPg().classList.contains('image')) {
-            const id = this.currentPg().parentElement.id,
-                img = this.currentPg().classList.contains('video') ? null : this.currentPg().querySelector('img'),
-                w = img ? parseFloat(getComputedStyle(img).width) : null;
-            if (w >= window.innerWidth) {
-                img.style.height = 'auto';
-                img.style.width = '100vw';
+    image() {
+        const id = cp().parentElement.id,
+            img = cp().querySelector('img'),
+            w = parseFloat(getComputedStyle(img).width);
+        this.imgSize(img, w);
+        this.imgRes(id, img);
+    }
+    imgSize(img, w) {
+        if (w >= window.innerWidth) {
+            img.style.height = 'auto';
+            img.style.width = '100vw';
+        }
+    }
+    imgRes(id, img) {
+        const siblings = Array.from(cp().parentElement.getElementsByClassName('image'));
+        if (siblings[siblings.length - 1].classList.contains('ft-holder')) {
+            siblings.pop();
+        }
+        const imgNum = siblings.findIndex(n => n === cp()) + 1,
+            src = `images/${id}/hiRes/${imgNum}.jpg`;
+        if (img.getAttribute !== src && imgNum !== 0) {
+            if (!cp().classList.contains('ft-holder')) {
+                loading('show')
             }
-            if (!this.currentPg().classList.contains('video')) {
-                const arr = Array.from(this.currentPg().parentElement.getElementsByClassName('image'));
-                if (arr[arr.length - 1].classList.contains('ft-holder')) {
-                    arr.pop();
-                }
-                const imgNum = arr.findIndex(n => n === this.currentPg()) + 1,
-                    src = `images/${id}/hiRes/${imgNum}.jpg`;
-                if (!this.currentPg().classList.contains('ft-holder')) {
-                    this.display('.loading', 'flex')
-                }
-                console.log(document.querySelector('.loading').style.display)
-                if (img.complete &&
-                    img.getAttribute !== src &&
-                    imgNum !== 0) {
-                    img.setAttribute('src', src)
-                    this.display('.loading', 'none')
-                } else if (img.getAttribute !== src &&
-                    imgNum !== 0) {
-                    img.onload = () => img.setAttribute('src', src)
-                    this.display('.loading', 'flex')
-                }
+            const callback = () => {
+                img.setAttribute('src', src);
             }
+            resolution(img, callback, img.complete, 'onload')
         }
     }
     videoPlay() {
-        if (this.currentPg().classList.contains('video')) {
-            const vid = this.currentPg().querySelector('video');
+        if (cp().classList.contains('video')) {
+            const vid = cp().querySelector('video');
             this.display('.loading', 'flex')
             if (vid.readyState == 4) {
                 this.display('.loading', 'none')
@@ -104,24 +138,19 @@ class Slide {
             }
         }
     }
-    display(elem, style) {
-        if (typeof elem == 'string') {
-            document.querySelector(elem).style.display = style;
-        } else if (typeof elem == 'object') {
-            elem.style.display = style;
-        }
+    video() {
+        const vid = cp().querySelector('video'),
+            ready = () => vid.readyState === 4;
+        loading('flex');
+        resolution(vid, () => {
+            vid.currentTime = 1;
+            vid.play();
+        }, ready, 'oncanplaythrough')
     }
-    endpage() {
-        if (this.currentPg().classList.contains('end-page')) {
-            document.body.style.backgroundColor = '#e8968b';
-            document.body.style.color = 'white';
-            this.display('.fullscreen', 'none');
-        } else {
-            document.body.style.backgroundColor = 'white';
-            document.body.style.color = '#e8968b';
-            this.display('.fullscreen', '');
-        }
-
+    endpage(negative, fullscreen) {
+        document.body.style.backgroundColor = negative ? '#e8968b' : 'white';
+        document.body.style.color = negative ? 'white' : '#e8968b';
+        this.display('.fullscreen', fullscreen)
     }
 }
 
@@ -151,10 +180,10 @@ class Events {
                     ft = true
                 }
                 if (slide.entered && !ft &&
-                    !slide.currentPg().classList.contains('end-page')) {
+                    !slide.currentPg().classList.contains('endpage')) {
                     slide.change(windowPosition(e) ?
                         -1 : 1)
-                } else if (slide.currentPg().classList.contains('end-page')) {
+                } else if (slide.currentPg().classList.contains('endpage')) {
                     slide.change(-1)
                 }
 
@@ -188,7 +217,7 @@ class Events {
                 if (!cursorHelper) {
                     return
                 }
-                if (!slide.currentPg().classList.contains('end-page')) {
+                if (!slide.currentPg().classList.contains('endpage')) {
                     document.body.style.cursor = `-webkit-image-set(url(cursor/${
                     windowPosition(e) ? 'prev' : 'next'}_clr.svg) 2.5x) 20 20, ${
                     windowPosition(e) ? 'w-resize' : 'e-resize'}`;
@@ -298,7 +327,6 @@ class FlipThrough {
         }
         this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/lowRes/f${this.currentPgNum}.jpg`);
         slide.display('.loading', 'flex')
-        console.log(document.querySelector('.loading').style.display)
         if (this.dom.complete) {
             this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`)
             slide.display('.loading', 'none')
@@ -341,6 +369,29 @@ for (let i = 0; i < 3; i++) {
 }
 collection.pc3.blue = [2, 3, 5, 9, 11, 13, 15, 19, 27, 37, 38, 39, 40, 41];
 evthandler.initialize();
+const chldnH = (parent) => {
+        const top = parent.firstElementChild.getBoundingClientRect().top,
+            bottom = parent.lastElementChild.getBoundingClientRect().bottom;
+        return bottom - top
+    },
+    cp = slide.currentPg,
+    loading = style => {
+        slide.display('.loading', (style == 'show' ? 'flex' : 'none'))
+    };
+
+function resolution(img, callback, complete, load) {
+    const check = cb => {
+        if (complete) {
+            cb()
+        } else {
+            img[load] = () => cb()
+        }
+    }
+    check(() => {
+        callback();
+        check(loading)
+    })
+}
 
 function pc4Cursor() {
     if (slide.currentPg().parentElement.id == 'pc4' &&
@@ -378,7 +429,6 @@ collection.pc6.frenchFold = function () {
     this.ff.style.right = this.fullscreen() ? '5vw' : '10vw';
     this.ff.style.display = this.match() ? 'block' : 'none';
     slide.display('.loading', 'flex')
-    console.log(document.querySelector('.loading').style.display)
     if (this.match()) {
         const i = this.index.findIndex(elem => elem == this.currentPgNum);
         this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/lowRes/ff${i + 1}.jpg`)
@@ -396,12 +446,13 @@ collection.pc6.frenchFold = function () {
 slide.display('.fullscreen', 'none');
 $.fn.preload = function () {
     this.each(function () {
-        $('<img/>')[0].src = this;
-    });
+        $('<img>')[0].src = this;
+    })
+    console.log('all loaded')
 }
 const imgArr = [
-    'images/cursor.auto_yt.svg', 'images/cursor.next_yt.svg',
-    'images/cursor.prev_clr.svg', 'images/cursor.next_clr.svg'
+    'cursor/auto_yt.svg', 'cursor/next_yt.svg',
+    'cursor/prev_clr.svg', 'cursor/next_clr.svg'
 ];
 for (let i = 0; i < 3; i++) {
     const pa = pageAmt[i];
