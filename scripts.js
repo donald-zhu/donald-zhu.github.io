@@ -264,6 +264,7 @@ class FlipThrough {
         }
         this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/lowRes/f${this.currentPgNum}.jpg`);
         this.dom.onload = () => {
+            console.log(`loaded f${this.currentPgNum}.jpg`)
             this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`)
         }
     }
