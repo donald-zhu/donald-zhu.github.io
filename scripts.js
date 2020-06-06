@@ -39,9 +39,7 @@ class Slide {
         this.display('.fullscreen', '');
     }
     change(increment) {
-        if (this.current == 0 && increment < 0) {
-            return
-        }
+        if (this.current == 0 && increment < 0) return;
         if (slide.obstruct) {
             this.obstruct = false;
             return
@@ -58,11 +56,8 @@ class Slide {
             (cp().classList.contains(obj.className) ? true : false);
         let arg = validation ? obj.matched : obj.noMatch;
         if (!arg) {
-            if (!validation) {
-                return
-            } else {
-                arg = [null, null]
-            }
+            if (!validation) return;
+            arg = [null, null]
         }
         this[obj.className](...arg);
     }
@@ -121,23 +116,6 @@ class Slide {
             resolution(img, callback, img.complete, 'onload')
         }
     }
-    videoPlay() {
-        if (cp().classList.contains('video')) {
-            const vid = cp().querySelector('video');
-            this.display('.loading', 'flex')
-            if (vid.readyState == 4) {
-                this.display('.loading', 'none')
-                vid.currentTime = 1;
-                vid.play();
-            } else {
-                vid.oncanplaythrough = () => {
-                    this.display('.loading', 'none')
-                    vid.currentTime = 1;
-                    vid.play();
-                }
-            }
-        }
-    }
     video() {
         const vid = cp().querySelector('video'),
             ready = () => vid.readyState === 4;
@@ -161,44 +139,43 @@ class Events {
         this.click = [
             ['.enter', () => slide.enter()],
             ['body', e => {
-                let ft;
-                if (slide.currentPg().classList.contains('ft-holder')) {
-                    const pcNum = slide.currentPg().id.replace('ft-holder', '');
-                    if (e.target.classList.contains('ft') && !collection[pcNum].flipped) {
-                        collection[pcNum].startFlip();
+                let prevent;
+                if (hasClass('ft-holder')) {
+                    let currentFt = ft[cp().id.replace('ft-holder', '')]
+                    if (e.target.classList.contains('ft') && !currentFt.flipped) {
+                        currentFt.startFlip();
                     } else {
-                        collection[pcNum].remind();
+                        currentFt.remind();
                     }
                 }
                 if (e.target.classList.contains('prevent-click')) {
-                    ft = true
+                    prevent = true
                 }
-                if (slide.entered && !ft) {
+                if (slide.entered && !prevent) {
                     slide.change(windowPosition(e) ?
                         -1 : 1)
-                } else if (slide.currentPg().classList.contains('endpage')) {
-                    slide.change(-1)
                 }
             }],
-            ['.fullscreen', this.fullscreen],
-            ['#video-1', () => {
-                document.getElementById('video-1').currentTime = 1;
-                document.getElementById('video-1').play();
+            ['.fullscreen', () => {
+                this.fullscreen();
+                if (document.getElementById('ff-text').style.display == 'block') {
+                    document.getElementById('pc6-ft').style.left = '5vw';
+                    document.getElementById('ff').style.right = '5vw';
+                }
             }],
-            ['#video-2', () => {
-                document.getElementById('video-2').currentTime = 1;
-                document.getElementById('video-2').play();
+            [Array.from(document.getElementsByTagName('video')), e => {
+                e.currentTarget.currentTime = 1;
+                e.currentTarget.play()
             }],
-            ['#pc2 .image img', () => {
-                window.open("https://www.thepoorimage.com");
-            }],
-            ['#pc2text .text-indent', () => {
-                window.open("https://www.thepoorimage.com");
+            ['.endpage', () => {
+                slide.change(-1)
             }],
             ['.restart', () => {
                 slide.current = 0;
                 slide.change(0);
-                //location.reload();
+            }],
+            [Array.from(document.getElementsByClassName('pc2-click')), () => {
+                window.open("https://www.thepoorimage.com")
             }],
             ['.instagram', () => {
                 window.open("https://www.instagram.com/donaldzhu.graphics/");
@@ -206,10 +183,8 @@ class Events {
         ];
         this.mousemove = [
             ['body', e => {
-                if (!cursorHelper) {
-                    return
-                }
-                if (!slide.currentPg().classList.contains('endpage')) {
+                if (!cursorHelper) return
+                if (!hasClass('endpage')) {
                     document.body.style.cursor = `-webkit-image-set(url(cursor/${
                     windowPosition(e) ? 'prev' : 'next'}_clr.svg) 2.5x) 20 20, ${
                     windowPosition(e) ? 'w-resize' : 'e-resize'}`;
@@ -229,14 +204,13 @@ class Events {
         for (let i = 0; i < conditions.length; i++) {
             validate(conditions[i])
         }
-        const ffDisplay = document.getElementById('ff-text').style.display;
-        if (ffDisplay == 'block') {
-            document.getElementById('pc6-ft').style.left = '5vw';
-            document.getElementById('ff').style.right = '5vw';
-        }
     }
     addEvt(elem, evt, callback) {
-        if (typeof elem == 'string') {
+        if (Array.isArray(elem)) {
+            for (let i = 0; i < elem.length; i++) {
+                elem[i].addEventListener(evt, callback)
+            }
+        } else if (typeof elem == 'string') {
             document.querySelector(elem).addEventListener(evt, callback)
         } else if (typeof elem == 'object') {
             elem.addEventListener(evt, callback)
@@ -344,23 +318,24 @@ class FlipThrough {
 }
 
 const slide = new Slide(),
-    ft = new FlipThrough(),
-    collection = {
+    flipThrough = new FlipThrough();
+//flipThrough
+const ft = {
         pc1,
         pc3,
         pc6
-    },
-    evthandler = new Events();
-const ftPc = [1, 3, 6];
-const pageAmt = [116, 44, 39]
+};
+    ftPc = [1, 3, 6],
+    pageAmt = [116, 44, 39]
 for (let i = 0; i < 3; i++) {
-    const ftNum = ftPc[i],
-        lastPage = pageAmt[i]
-    collection[`pc${ftNum}`] = new FlipThrough(ftNum, lastPage);
-    collection[`pc${ftNum}`].hover()
+    ft[`pc${ftPc[i]}`] = new FlipThrough(ftPc[i], pageAmt[i]);
+    ft[`pc${ftPc[i]}`].hover()
 }
-collection.pc3.blue = [2, 3, 5, 9, 11, 13, 15, 19, 27, 37, 38, 39, 40, 41];
+ft.pc3.blue = [2, 3, 5, 9, 11, 13, 15, 19, 27, 37, 38, 39, 40, 41];
+
+const evthandler = new Events();
 evthandler.initialize();
+
 const chldnH = (parent) => {
         const top = parent.firstElementChild.getBoundingClientRect().top,
             bottom = parent.lastElementChild.getBoundingClientRect().bottom;
@@ -369,7 +344,8 @@ const chldnH = (parent) => {
     cp = slide.currentPg,
     loading = style => {
         slide.display('.loading', (style == 'show' ? 'flex' : 'none'))
-    };
+    },
+    hasClass = className => cp().classList.contains(className);
 
 function resolution(img, callback, complete, load) {
     const check = cb => {
@@ -386,8 +362,8 @@ function resolution(img, callback, complete, load) {
 }
 
 function pc4Cursor() {
-    if (slide.currentPg().parentElement.id == 'pc4' &&
-        slide.currentPg().classList.contains('image') &&
+    if (cp().parentElement.id == 'pc4' &&
+        hasClass('image') &&
         !pc4Cursor.int) {
         pc4Cursor.n = 1;
         pc4Change()
@@ -408,7 +384,7 @@ function pc4Change() {
     cursorHelper = false;
 }
 
-collection.pc6.frenchFold = function () {
+ft.pc6.frenchFold = function () {
     this.index = [7, 8, 9, 11, 12, 13, 14, 15, 17, 18, 19, 20, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32, 33, 34, 35, 37, 38];
     this.ff = document.getElementById('ff');
     this.fullscreen = () => window.fullScreen || (window.innerWidth == screen.width && window.innerHeight == screen.height);

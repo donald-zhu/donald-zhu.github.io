@@ -145,13 +145,13 @@ video {
     align-items: center;
 }
 
-#pc2 .image img {
+#pc2-img {
     margin-top: 5vh;
     height: auto;
 }
 
-#pc2 .image img,
-#pc2text .text-indent {
+#pc2-img,
+#pc2-link {
     width: 75vw;
 }
 
@@ -159,7 +159,7 @@ video {
     height: 15vh;
 }
 
-#pc2text .text-indent {
+#pc2-link {
     top: -3vh;
     left: 0;
     margin-left: 12.5vw;
@@ -173,6 +173,8 @@ video {
     border: none;
 }
 
+#pc1-1,
+#pc2-link,
 img,
 video,
 .fullscreen,
@@ -203,7 +205,7 @@ video {
 }
 
 .image,
-#pc2text .text-indent {
+#pc2-link {
     display: flex;
 }
 
@@ -325,7 +327,7 @@ body {
     font-style: italic;
 }
 
-#pc2text .text-indent {
+#pc2-link {
     font-size: 50%;
     letter-spacing: -0.1vw;
     font-style: italic;
@@ -366,7 +368,7 @@ video {
     cursor: -webkit-image-set(url(cursor/replay_clr.svg) 2.5x) 5 5, auto;
 }
 
-#pc2 .image img,
-#pc2text .text-indent {
+#pc2-img,
+#pc2-link {
     cursor: -webkit-image-set(url(cursor/auto_clr.svg) 2.5x) 5 5, pointer;
 }
