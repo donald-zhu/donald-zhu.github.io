@@ -263,7 +263,9 @@ class FlipThrough {
                         'w-resize' : 'e-resize'}`
         }
         this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/lowRes/f${this.currentPgNum}.jpg`);
-        this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`);
+        this.dom.onload = () => {
+            this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`)
+        }
     }
     hover() {
         const dom = $(`#${this.pcNum}-ft`);
