@@ -56,19 +56,40 @@ class Slide {
     }
     imgAdjust() {
         if (this.currentPg().classList.contains('image')) {
-            const img = this.currentPg().querySelector('img'),
+            const id = this.currentPg().parentElement.id,
+                img = this.currentPg().classList.contains('video') ? null : this.currentPg().querySelector('img'),
                 w = img ? parseFloat(getComputedStyle(img).width) : null;
             if (w >= window.innerWidth) {
                 img.style.height = 'auto';
                 img.style.width = '100vw';
+            }
+            if (!this.currentPg().classList.contains('video')) {
+                const arr = Array.from(this.currentPg().parentElement.getElementsByClassName('image'));
+                if (arr[arr.length - 1].classList.contains('ft-holder')) {
+                    arr.pop();
+                }
+                const imgNum = arr.findIndex(n => n === this.currentPg()) + 1,
+                    src = `images/${id}/hiRes/${imgNum}.jpg`;
+                if (img.complete &&
+                    img.getAttribute !== src &&
+                    imgNum !== 0) {
+                    img.setAttribute('src', src)
+                }
             }
         }
     }
     videoPlay() {
         if (this.currentPg().classList.contains('video')) {
             const vid = this.currentPg().querySelector('video');
-            vid.autoplay = true;
-            vid.play();
+            if (vid.readyState == 4) {
+                vid.currentTime = 1;
+                vid.play();
+            } else {
+                vid.oncanplaythrough = () => {
+                    vid.currentTime = 1;
+                    vid.play();
+                }
+            }
         }
     }
     display(elem, style) {
@@ -128,11 +149,11 @@ class Events {
             }],
             ['.fullscreen', this.fullscreen],
             ['#video-1', () => {
-                document.getElementById('video-1').currentTime = 0;
+                document.getElementById('video-1').currentTime = 1;
                 document.getElementById('video-1').play();
             }],
             ['#video-2', () => {
-                document.getElementById('video-2').currentTime = 0;
+                document.getElementById('video-2').currentTime = 1;
                 document.getElementById('video-2').play();
             }],
             ['#pc2 .image img', () => {
@@ -175,7 +196,6 @@ class Events {
         }
         const ffDisplay = document.getElementById('ff-text').style.display;
         if (ffDisplay == 'block') {
-            console.log('hi')
             document.getElementById('pc6-ft').style.left = '5vw';
             document.getElementById('ff').style.right = '5vw';
         }
@@ -263,9 +283,12 @@ class FlipThrough {
                         'w-resize' : 'e-resize'}`
         }
         this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/lowRes/f${this.currentPgNum}.jpg`);
-        this.dom.onload = () => {
-            console.log(`loaded f${this.currentPgNum}.jpg`)
+        if (this.dom.complete) {
             this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`)
+        } else {
+            this.dom.onload = () => {
+                this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`)
+            }
         }
     }
     hover() {
@@ -334,9 +357,22 @@ collection.pc6.frenchFold = function () {
         '5vw' : '10vw') : '';
     this.ff.style.right = this.fullscreen() ? '5vw' : '10vw';
     this.ff.style.display = this.match() ? 'block' : 'none';
+    let to;
     if (this.match()) {
         const i = this.index.findIndex(elem => elem == this.currentPgNum);
-        this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
+        this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/lowRes/ff${i + 1}.jpg`)
+        if (this.ff.complete) {
+            this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
+        } else {
+            this.ff.onload = () =>  this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`);
+            /*to = setInterval(() => {
+                if (this.ff.complete) {
+                    console.log('why th fuck not')
+                    this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
+                    clearInterval(to)
+                }
+            }, 100)*/
+        }
     }
     document.getElementById('ff-text').style.display = this.match() ? 'block' : 'none';
 }
