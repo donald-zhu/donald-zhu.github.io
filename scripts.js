@@ -313,9 +313,11 @@ const slide = new Slide(),
         pc6
     },
     evthandler = new Events();
+const ftPc = [1, 3, 6];
+const pageAmt = [116, 44, 39]
 for (let i = 0; i < 3; i++) {
-    const ftNum = [1, 3, 6][i],
-        lastPage = [116, 44, 39][i]
+    const ftNum = ftPc[i],
+        lastPage = pageAmt[i]
     collection[`pc${ftNum}`] = new FlipThrough(ftNum, lastPage);
     collection[`pc${ftNum}`].hover()
 }
@@ -364,17 +366,26 @@ collection.pc6.frenchFold = function () {
         if (this.ff.complete) {
             this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
         } else {
-            this.ff.onload = () =>  this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`);
-            /*to = setInterval(() => {
-                if (this.ff.complete) {
-                    console.log('why th fuck not')
-                    this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
-                    clearInterval(to)
-                }
-            }, 100)*/
+            this.ff.onload = () => this.ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`);
         }
     }
     document.getElementById('ff-text').style.display = this.match() ? 'block' : 'none';
 }
 
 slide.display('.fullscreen', 'none');
+
+$.fn.preload = function () {
+    this.each(function () {
+        $('<img/>')[0].src = this;
+    });
+}
+const imgArr = [];
+for (let i = 0; i < 3; i++) {
+    const pa = pageAmt[i];
+    const n = ftPc[i]
+    for (let i = 0; i < pa; i++) {
+        imgArr.push(`images/pc${n}/fullbook/f${i + 1}.jpg`)
+        imgArr.push(`images/pc${n}/fullbook/f1_hover.jpg`);
+    }
+}
+$(imgArr).preload();
