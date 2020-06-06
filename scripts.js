@@ -70,10 +70,10 @@ class Slide {
                 }
                 const imgNum = arr.findIndex(n => n === this.currentPg()) + 1,
                     src = `images/${id}/hiRes/${imgNum}.jpg`;
-                    if (!this.currentPg().classList.contains('ft-holder')) {
-                        this.display('.loading', 'flex')
-                    }
-                    console.log(document.querySelector('.loading').style.display)
+                if (!this.currentPg().classList.contains('ft-holder')) {
+                    this.display('.loading', 'flex')
+                }
+                console.log(document.querySelector('.loading').style.display)
                 if (img.complete &&
                     img.getAttribute !== src &&
                     imgNum !== 0) {
@@ -81,23 +81,23 @@ class Slide {
                     this.display('.loading', 'none')
                 } else if (img.getAttribute !== src &&
                     imgNum !== 0) {
-                        img.onload = () => img.setAttribute('src', src)
-                        this.display('.loading', 'flex')
-                    }
+                    img.onload = () => img.setAttribute('src', src)
+                    this.display('.loading', 'flex')
+                }
             }
         }
     }
     videoPlay() {
         if (this.currentPg().classList.contains('video')) {
             const vid = this.currentPg().querySelector('video');
-            this.display('.loading','flex')
+            this.display('.loading', 'flex')
             if (vid.readyState == 4) {
-                this.display('.loading','none')
+                this.display('.loading', 'none')
                 vid.currentTime = 1;
                 vid.play();
             } else {
                 vid.oncanplaythrough = () => {
-                    this.display('.loading','none')
+                    this.display('.loading', 'none')
                     vid.currentTime = 1;
                     vid.play();
                 }
@@ -175,7 +175,9 @@ class Events {
                 window.open("https://www.thepoorimage.com");
             }],
             ['.restart', () => {
-                location.reload();
+                slide.current = 0;
+                slide.change(0);
+                //location.reload();
             }],
             ['.instagram', () => {
                 window.open("https://www.instagram.com/donaldzhu.graphics/");
@@ -339,6 +341,7 @@ for (let i = 0; i < 3; i++) {
 }
 collection.pc3.blue = [2, 3, 5, 9, 11, 13, 15, 19, 27, 37, 38, 39, 40, 41];
 evthandler.initialize();
+
 function pc4Cursor() {
     if (slide.currentPg().parentElement.id == 'pc4' &&
         slide.currentPg().classList.contains('image')) {
@@ -396,7 +399,10 @@ $.fn.preload = function () {
         $('<img/>')[0].src = this;
     });
 }
-const imgArr = [];
+const imgArr = [
+    'images/cursor.auto_yt.svg', 'images/cursor.next_yt.svg',
+    'images/cursor.prev_clr.svg', 'images/cursor.next_clr.svg'
+];
 for (let i = 0; i < 3; i++) {
     const pa = pageAmt[i];
     const n = ftPc[i]
