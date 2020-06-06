@@ -394,22 +394,28 @@ const evthandler = new Events();
 evthandler.initialize();
 
 slide.display('.fullscreen', 'none');
-$.fn.preload = function () {
-    this.each(function () {
-        $('<img>')[0].src = this;
-    })
-    console.log('all loaded')
+
+function load(srcArr, total) {
+    let numLoaded = 0;
+    for (let i = 0; i < srcArr.length; i++) {
+        const src = srcArr[i];
+        const img = new Image();
+        img.src = src;
+        console.log(`${img.src.replace('http://127.0.0.1:5500/', '')}`)
+    }
 }
-const imgArr = [
+const cursorArr = [
     'cursor/auto_yt.svg', 'cursor/next_yt.svg',
     'cursor/prev_clr.svg', 'cursor/next_clr.svg'
 ];
+load(cursorArr, 4)
+
+const ffArr = [];
 for (let i = 0; i < 3; i++) {
-    const pa = pageAmt[i];
     const n = ftPc[i]
-    for (let i = 0; i < pa; i++) {
-        imgArr.push(`images/pc${n}/fullbook/f${i + 1}.jpg`)
-        imgArr.push(`images/pc${n}/fullbook/f1_hover.jpg`);
+    for (let ii = 0; ii < pageAmt[i]; ii++) {
+        ffArr.push(`images/pc${n}/fullbook/f${ii + 1}.jpg`)
     }
+    ffArr.push(`images/pc${n}/fullbook/f1_hover.jpg`);
 }
-$(imgArr).preload();
+load(ffArr, 119)
