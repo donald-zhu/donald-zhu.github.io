@@ -38,15 +38,7 @@ class Slide {
         this.display('.title-page', 'none',
             '.fullscreen', '',
             '.loading', 'flex');
-        checkLoad();
-        loaderInt = setInterval(() => {
-            checkLoad();
-            if (loadPrecentage == 100) {
-                this.display('.loading', 'none')
-                clearInterval(loaderInt);
-            }
-        }, 200)
-
+        loader.initialize();
     }
     change(increment) {
         if (this.current == 0 && increment < 0) return;
@@ -296,6 +288,85 @@ class FlipThrough {
     }
 }
 
+class Loader {
+    constructor() {
+        this.cursor = ['cursor/auto_yt.svg', 'cursor/next_yt.svg']
+        this.imgArr = [];
+        this.vidArr = ['images/pc5/5.mp4', 'images/pc5/6.mp4'];
+        this.svg = ['auto', 'next', 'prev', 'replay'];
+        this.imgDiv = document.getElementById('image-loader');
+        this.numLoaded = 0;
+        this.precentage = 0;
+        this.notLoaded = [];
+        this.int;
+    }
+    populate() {
+        for (let i = 0; i < this.svg.length; i++) {
+            this.imgArr.push(`cursor/${this.svg[i]}_clr.svg`, `cursor/${this.svg[i]}_yt.svg`)
+        }
+        for (let i = 0; i < 2; i++) this.imgArr.splice(this.imgArr.indexOf(this.cursor[i]), 1)
+        this.imgArr.push('cursor/next_bl.svg', 'cursor/prev_bl.svg');
+        const imgCount = [13, 1, 11, 8, 4, 12, 6];
+        for (let i = 0; i < imgCount.length; i++) {
+            for (let ii = 0; ii < imgCount[i]; ii++) {
+                this.imgArr.push(`images/pc${i + 1}/${ii + 1}.jpg`)
+            }
+        }
+        for (let i = 0; i < 3; i++) {
+            const n = ftPc[i];
+            for (let ii = 0; ii < pageAmt[i]; ii++) {
+                this.imgArr.push(`images/pc${n}/fullbook/f${ii + 1}.jpg`)
+            }
+            this.imgArr.push(`images/pc${n}/fullbook/f1_hover.jpg`)
+        }
+        for (let i = 0; i < 27; i++) {
+            this.imgArr.push(`images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
+        }
+        for (let i = 0; i < 17; i++) {
+            this.imgArr.push(`pc4/${i + 1}.svg`)
+        }
+    }
+    preload(arr) {
+        for (let i = 0; i < arr.length; i++) {
+            const src = arr[i],
+                img = new Image();
+            img.src = src;
+            this.imgDiv.appendChild(img);
+        }
+    }
+    log() {
+        for (let i = 0; i < this.imgDiv.length; i++) {
+            if (this.imgDiv[i].complete) {
+                this.numLoaded += 1;
+            } else {
+                this.imgDiv[i].onload = () => this.numLoaded += 1;
+            }
+        }
+    }
+    update() {
+        const img = Array.from(document.getElementById('image-loader').children);
+        this.notLoaded = img.filter(n => !n.complete);
+        this.numLoaded = 311 - this.notLoaded.length
+        this.precentage = this.numLoaded == 311 ? 100 : Math.floor((this.numLoaded / 311) * 100);
+        document.querySelector('.loading-text').innerHTML = this.precentage + '%';
+    }
+    initialize() {
+        document.body.style.pointerEvents = 'none';
+        this.populate();
+        this.preload(this.imgArr);
+        this.log()
+        this.update();
+        this.int = setInterval(() => {
+            this.update();
+            if (this.precentage == 100) {
+                slide.display('.loading', 'none')
+                document.body.style.pointerEvents = 'auto';
+                clearInterval(this.int);
+            }
+        }, 100)
+    }
+}
+
 const slide = new Slide(),
     flipThrough = new FlipThrough(),
     chldnH = (parent) => {
@@ -361,64 +432,6 @@ ft.pc6.frenchFold = function () {
 const evthandler = new Events();
 evthandler.initialize();
 
+const loader = new Loader();
 slide.display('.fullscreen', 'none');
-
-const imgArr = [];
-const svg = ['auto', 'next', 'prev', 'replay']
-for (let i = 0; i < svg.length; i++) {
-    imgArr.push(`cursor/${svg[i]}_clr.svg`, `cursor/${svg[i]}_yt.svg`)
-}
-imgArr.push('cursor/next_bl.svg', 'cursor/prev_bl.svg');
-const imgCount = [13, 1, 11, 8, 4, 12, 6];
-for (let i = 0; i < imgCount.length; i++) {
-    for (let ii = 0; ii < imgCount[i]; ii++) {
-        imgArr.push(`images/pc${i + 1}/${ii + 1}.jpg`)
-    }
-}
-for (let i = 0; i < 3; i++) {
-    const n = ftPc[i];
-    for (let ii = 0; ii < pageAmt[i]; ii++) {
-        imgArr.push(`images/pc${n}/fullbook/f${ii + 1}.jpg`)
-    }
-    imgArr.push(`images/pc${n}/fullbook/f1_hover.jpg`)
-}
-for (let i = 0; i < 27; i++) {
-    imgArr.push(`images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
-}
-for (let i = 0; i < 17; i++) {
-    imgArr.push(`pc4/${i + 1}.svg`)
-}
-
-const imgDiv = document.getElementById('image-loader');
-for (let i = 0; i < imgArr.length; i++) {
-    const src = imgArr[i],
-        img = new Image();
-    img.src = src;
-    imgDiv.appendChild(img);
-}
-const log = () => {
-    numLoaded += 1;
-    if (numLoaded === imgDiv.length) {
-        console.log('all image loadeed')
-    }
-}
-for (let i = 0; i < imgDiv.length; i++) {
-    if (imgDiv[i].complete) {
-        log()
-    } else {
-        imgDiv[i].onload = log();
-    }
-}
-let loadPrecentage = 0,
-    numLoaded = 0,
-    notLoaded,
-    loaderInt;
-const checkLoad = () => {
-    const img = Array.from(document.getElementById('image-loader').children);
-    notLoaded = img.filter(n => !n.complete);
-    numLoaded = 311 - notLoaded.length
-    loadPrecentage = numLoaded == 311 ? 100 : Math.floor((numLoaded / 311) * 100);
-    document.querySelector('.loading-text').innerHTML = loadPrecentage + '%';
-}
-
-const vidArr = ['images/pc5/5.mp4', 'images/pc5/6.mp4'];
+loader.preload(loader.cursor);
