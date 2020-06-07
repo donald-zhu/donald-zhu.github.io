@@ -77,7 +77,6 @@ class Slide {
             hasClass('image') ? 'flex' : 'block')
         if (hasClass('image') && !hasClass('ft-holder') &&
             !cp().querySelector('img').getAttribute('src').includes('hiRes')) {
-            console.log('hi')
         }
         for (let i = 0; i < this.pgList.length; i++) {
             const page = this.pgList[i];
@@ -105,6 +104,9 @@ class Slide {
             img.style.height = 'auto';
             img.style.width = '100vw';
         }
+    }
+    video() {
+        cp().querySelector('video').play();
     }
     endpage(negative, fullscreen) {
         document.body.style.backgroundColor = negative ? '#e8968b' : 'white';
