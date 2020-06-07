@@ -76,8 +76,7 @@ class Slide {
         this.display(cp(),
             hasClass('image') ? 'flex' : 'block')
         if (hasClass('image') && !hasClass('ft-holder') &&
-            !cp().querySelector('img').getAttribute('src').includes('hiRes')) {
-        }
+            !cp().querySelector('img').getAttribute('src').includes('hiRes')) {}
         for (let i = 0; i < this.pgList.length; i++) {
             const page = this.pgList[i];
             if (i !== this.current &&
@@ -369,7 +368,7 @@ class Loader {
             document.getElementById('video-loader').appendChild(vid);
         }
     }
-    initialize(){
+    initialize() {
         this.preload(this.cursor, this.otherDiv)
         this.populateEssentials();
         this.preload(this.essentials, this.essDiv)
@@ -408,6 +407,7 @@ function pc4Cursor() {
         hasClass('image') &&
         !pc4Cursor.int) {
         pc4Cursor.n = 1;
+        cursorHelper = false;
         pc4Change()
         pc4Cursor.int = setInterval(() => {
             pc4Cursor.n = pc4Cursor.n <= 17 ? (pc4Cursor.n + 1) : 1;
@@ -423,7 +423,6 @@ function pc4Cursor() {
 function pc4Change() {
     const style = `-webkit-image-set(url(pc4/${pc4Cursor.n}.svg) 2x) 5 5, auto`
     document.querySelector('body').style.cursor = style;
-    cursorHelper = false;
 }
 
 //flipThrough
