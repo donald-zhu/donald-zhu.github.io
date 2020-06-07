@@ -1,4 +1,4 @@
-//v7.1
+//
 class Slide {
     constructor() {
         this.pgList = Array.from(
