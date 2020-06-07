@@ -397,21 +397,22 @@ slide.display('.fullscreen', 'none');
 
 let numLoaded = 0;
 
-function load(srcArr, srcObjList, next) {
+function load(srcArr, next, message) {
+    srcArr.list = [];
     for (let i = 0; i < srcArr.length; i++) {
         const src = srcArr[i];
         const img = new Image();
         img.src = src;
-        srcObjList.push(img);
+        srcArr.list.push(img);
     }
-    for (let i = 0; i < srcObjList.length; i++) {
-        const obj = srcObjList[i]
+    for (let i = 0; i < srcArr.list.length; i++) {
+        const obj = srcArr.list[i]
         const log = () => {
             numLoaded += 1;
-            if (numLoaded == srcObjList.length) {
-                console.log(`loaded ${srcObjList.length} resources`);
+            if (numLoaded == srcArr.list.length) {
+                console.log(`loaded ${srcArr.list.length} resources for ${message}.`);
                 numLoaded = 0;
-                if(next) next()
+                if (next) next()
             }
         }
         if (obj.complete) {
@@ -422,13 +423,11 @@ function load(srcArr, srcObjList, next) {
     }
 }
 const cursorArr = [
-        'cursor/auto_yt.svg', 'cursor/next_yt.svg',
-        'cursor/prev_clr.svg', 'cursor/next_clr.svg'
-    ],
-    cursorObjList = [];
+    'cursor/auto_yt.svg', 'cursor/next_yt.svg',
+    'cursor/prev_clr.svg', 'cursor/next_clr.svg'
+];
 
-const ffArr = [],
-    ffObjList = [];
+const ffArr = [];
 for (let i = 0; i < 3; i++) {
     const n = ftPc[i]
     for (let ii = 0; ii < pageAmt[i]; ii++) {
@@ -436,5 +435,36 @@ for (let i = 0; i < 3; i++) {
     }
     ffArr.push(`images/pc${n}/fullbook/f1_hover.jpg`);
 };
-const loadFf = () => load(ffArr, ffObjList)
-load(cursorArr, cursorObjList, loadFf);
+
+const lowResArr = [],
+    hiResArr = [];
+for (let i = 0; i < 7; i++) {
+    const list = Array.from(document.getElementById(`pc${i + 1}`).getElementsByClassName('image'))
+    const amt = !!ftPc.find(n => n == i + 1) ? (list.length - 1) :
+        i + 1 == 5 ? list.length - 2 :
+        list.length;
+    for (let ii = 0; ii < amt; ii++) {
+        lowResArr.push(`images/pc${i + 1}/${ii + 1}.jpg`);
+        hiResArr.push(`images/pc${i + 1}/hiRes/${ii + 1}.jpg`);
+    }
+}
+const videoArr = ['images/pc5/5.mp4', 'images/pc5/6.mp4'];
+const miscArr = [];
+for (let i = 0; i < 17; i++) {
+    miscArr.push(`pc4/${i + 1}.svg`);
+}
+let cursorCollection = [
+    'auto_clr', 'next_bl', 'prev_bl', 'prev_yt',
+    'replay_clr', 'replay_yt'
+]
+for (let i = 0; i < 6; i++) {
+    miscArr.push(`cursor/${cursorCollection[i]}.svg`)
+}
+
+const loadCursor = () => load(cursorArr, loadFf, 'main cursors'),
+    loadFf = () => load(ffArr, loadLowRes, 'flip-throughs'),
+    loadLowRes = () => load(lowResArr, loadHiRes, 'low resolution images'),
+    loadHiRes = () => load(hiResArr, loadVid, 'high resolution images'),
+loadVid = () => load(videoArr, loadMisc, 'videos'),
+loadMisc  = () => load(miscArr, null, 'Misc. All resources loaded.')
+loadCursor();
