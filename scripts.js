@@ -111,7 +111,7 @@ class Slide {
     video() {
         const vid = cp().querySelector('video'),
             ready = () => vid.readyState === 4;
-        loading('flex');
+        loading('show');
         resolution(vid, () => {
             vid.currentTime = 1;
             vid.play();
@@ -261,7 +261,7 @@ class FlipThrough {
         }
         if (this.pcNum == 'pc6') this.frenchFold();
         this.dom.setAttribute('src', `images/${this.pcNum}/fullbook/lowRes/f${this.currentPgNum}.jpg`);
-        loading('flex')
+        loading('show')
         const src = `images/${this.pcNum}/fullbook/f${this.currentPgNum}.jpg`;
         resolution(this.dom, src)
     }
@@ -381,7 +381,7 @@ ft.pc6.frenchFold = function () {
     ff.style.right = fullscreen() ? '5vw' : '10vw';
     ff.style.display = match() ? 'block' : 'none';
     if (match()) {
-        loading('flex')
+        loading('show')
         const i = this.index.findIndex(elem => elem == this.currentPgNum),
             hiResSrc = `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`;
         ff.setAttribute('src', `images/pc6/fullbook/frenchFold/lowRes/ff${i + 1}.jpg`)
