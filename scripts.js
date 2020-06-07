@@ -347,7 +347,7 @@ class Loader {
         const img = Array.from(document.getElementById('image-loader').children);
         this.notLoaded = img.filter(n => !n.complete);
         this.numLoaded = 309 - this.notLoaded.length
-        this.precentage = this.numLoaded == 309 ? 100 : Math.floor((this.numLoaded / 309) * 100);
+        this.precentage = this.numLoaded == 309 ? 100 : ((this.numLoaded / 309) * 100).toFixed(2);
         document.querySelector('.loading-text').innerHTML = this.precentage + '%';
     }
     initialize() {
