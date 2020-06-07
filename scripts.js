@@ -1,4 +1,4 @@
-//
+document.querySelector('.fullscreen').style.display = 'none';
 class Slide {
     constructor() {
         this.pgList = Array.from(
@@ -457,5 +457,4 @@ const evthandler = new Events();
 evthandler.initialize();
 
 const loader = new Loader();
-slide.display('.fullscreen', 'none');
 loader.initialize();
