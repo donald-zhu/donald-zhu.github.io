@@ -404,15 +404,16 @@ const slide = new Slide(),
 
 function pc4Cursor() {
     if (cp().parentElement.id == 'pc4' &&
-        hasClass('image') &&
-        !pc4Cursor.int) {
-        pc4Cursor.n = 1;
-        cursorHelper = false;
-        pc4Change()
-        pc4Cursor.int = setInterval(() => {
-            pc4Cursor.n = pc4Cursor.n <= 17 ? (pc4Cursor.n + 1) : 1;
+        hasClass('image')) {
+        if (!pc4Cursor.int) {
+            pc4Cursor.n = 1;
+            cursorHelper = false;
             pc4Change()
-        }, 1000)
+            pc4Cursor.int = setInterval(() => {
+                pc4Cursor.n = pc4Cursor.n <= 17 ? (pc4Cursor.n + 1) : 1;
+                pc4Change()
+            }, 1000)
+        }
     } else {
         clearInterval(pc4Cursor.int);
         pc4Cursor.int = null;
