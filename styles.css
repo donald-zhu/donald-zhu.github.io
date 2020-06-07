@@ -118,6 +118,7 @@ video {
 
 .loading {
     z-index: 9999999;
+    color: white !important;
 }
 
 :-webkit-full-screen #ff-text {
