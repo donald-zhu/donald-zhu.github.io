@@ -350,6 +350,13 @@ class Loader {
         this.precentage = this.numLoaded == 309 ? 100 : ((this.numLoaded / 309) * 100).toFixed(2);
         document.querySelector('.loading-text').innerHTML = this.precentage + '%';
     }
+    videoLoad() {
+        for (let i = 0; i < 2; i++) {
+            const vid = document.createElement('video');
+            vid.src = `images/pc5/${i + 5}.mp4`;
+            document.getElementById('video-loader').appendChild(vid);
+        }
+    }
     initialize() {
         document.body.style.pointerEvents = 'none';
         this.populate();
@@ -361,6 +368,7 @@ class Loader {
                 if (this.precentage == 100) {
                     slide.display('.loading', 'none')
                     document.body.style.pointerEvents = 'auto';
+                    this.videoLoad();
                     clearInterval(this.int);
                 }
             }, 100)
