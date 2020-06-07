@@ -407,6 +407,7 @@ function load(srcArr, next, message) {
         const src = srcArr[i];
         const img = new Image();
         img.src = src;
+        document.getElementById('image-loader').appendChild(img);
         srcArr.list.push(img);
     }
     for (let i = 0; i < srcArr.list.length; i++) {
@@ -424,7 +425,6 @@ function load(srcArr, next, message) {
         } else {
             log()
         }
-        //console.log(obj.src)
     }
 }
 const cursorArr = [
@@ -473,3 +473,4 @@ const loadCursor = () => load(cursorArr, loadFf, 'main cursors'),
     loadVid = () => load(videoArr, loadMisc, 'videos'),
     loadMisc = () => load(miscArr, null, 'Misc. All resources loaded.')
 loadCursor();
+

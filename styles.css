@@ -213,7 +213,8 @@ video {
 .loading,
 :-webkit-full-screen .fullscreen,
 .ft-reminder,
-#ff-text {
+#ff-text,
+#image-loader {
     display: none;
 }
 
