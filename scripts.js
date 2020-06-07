@@ -46,9 +46,9 @@ class Slide {
         pc4Cursor();
     }
     adjust(obj) {
-        const validation = obj.not ? (cp().classList.contains(obj.className) &&
-                !cp().classList.contains(obj.not) ? true : false) :
-            (cp().classList.contains(obj.className) ? true : false);
+        const validation = obj.not ? (hasClass(obj.className) &&
+                !hasClass(obj.not) ? true : false) :
+            (hasClass(obj.className) ? true : false);
         let arg = validation ? obj.matched : obj.noMatch;
         if (!arg) {
             if (!validation) return;
@@ -65,7 +65,12 @@ class Slide {
     }
     page() {
         this.display(cp(),
-            cp().classList.contains('image') ? 'flex' : 'block')
+            hasClass('image') ? 'flex' : 'block')
+            if (hasClass('image') && !hasClass('ft-holder')
+            && !cp().querySelector('img').getAttribute('src').includes('hiRes')) {
+                console.log('hi')
+                loading('show');
+            }
         for (let i = 0; i < this.pgList.length; i++) {
             const page = this.pgList[i];
             if (i !== this.current &&
@@ -102,7 +107,7 @@ class Slide {
         const imgNum = siblings.findIndex(n => n === cp()) + 1,
             src = `images/${id}/hiRes/${imgNum}.jpg`;
         if (img.getAttribute !== src && imgNum !== 0) {
-            if (!cp().classList.contains('ft-holder')) {
+            if (!hasClass('ft-holder')) {
                 loading('show')
             }
             resolution(img, src)
