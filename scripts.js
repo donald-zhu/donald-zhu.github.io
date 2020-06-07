@@ -346,8 +346,8 @@ class Loader {
     update() {
         const img = Array.from(document.getElementById('image-loader').children);
         this.notLoaded = img.filter(n => !n.complete);
-        this.numLoaded = 311 - this.notLoaded.length
-        this.precentage = this.numLoaded == 311 ? 100 : Math.floor((this.numLoaded / 311) * 100);
+        this.numLoaded = 309 - this.notLoaded.length
+        this.precentage = this.numLoaded == 309 ? 100 : Math.floor((this.numLoaded / 309) * 100);
         document.querySelector('.loading-text').innerHTML = this.precentage + '%';
     }
     initialize() {
@@ -355,15 +355,20 @@ class Loader {
         this.populate();
         this.preload(this.imgArr);
         this.log()
-        this.update();
-        this.int = setInterval(() => {
+        const setInt = () => {
+            this.int = setInterval(() => {
+                this.update();
+                if (this.precentage == 100) {
+                    slide.display('.loading', 'none')
+                    document.body.style.pointerEvents = 'auto';
+                    clearInterval(this.int);
+                }
+            }, 100)
+        };
+        setTimeout(() => {
             this.update();
-            if (this.precentage == 100) {
-                slide.display('.loading', 'none')
-                document.body.style.pointerEvents = 'auto';
-                clearInterval(this.int);
-            }
-        }, 100)
+            setInt();
+        }, 500)
     }
 }
 
