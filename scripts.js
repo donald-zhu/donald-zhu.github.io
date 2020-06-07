@@ -31,12 +31,22 @@ class Slide {
     }
     enter() {
         evthandler.fullscreen();
-        this.display('.title-page', 'none');
         document.body.style.color = '#e8968b';
         document.body.style.backgroundColor = 'white';
         this.change(0);
         this.entered = true;
-        this.display('.fullscreen', '');
+        this.display('.title-page', 'none',
+            '.fullscreen', '',
+            '.loading', 'flex');
+        checkLoad();
+        loaderInt = setInterval(() => {
+            checkLoad();
+            if (loadPrecentage == 100) {
+                this.display('.loading', 'none')
+                clearInterval(loaderInt);
+            }
+        }, 200)
+
     }
     change(increment) {
         if (this.current == 0 && increment < 0) return;
@@ -57,11 +67,17 @@ class Slide {
         }
         this[obj.className](...arg);
     }
-    display(elem, style) {
-        if (typeof elem == 'string') {
-            document.querySelector(elem).style.display = style;
-        } else if (typeof elem == 'object') {
-            elem.style.display = style;
+    display(...args) {
+        const itr = args.length / 2;
+        for (let i = 0; i < itr; i++) {
+            const elem = args.shift(),
+                style = args.shift();
+            if (style === undefined) return;
+            if (typeof elem == 'string') {
+                document.querySelector(elem).style.display = style;
+            } else if (typeof elem == 'object') {
+                elem.style.display = style;
+            }
         }
     }
     page() {
@@ -212,15 +228,15 @@ class FlipThrough {
     }
     remind() {
         if (!this.flipped && !this.reminded) {
-            slide.display(`#${this.pcNum}-arrow_l`, 'none')
-            slide.display(`#${this.pcNum}-reminder`, 'block')
+            slide.display(`#${this.pcNum}-arrow_l`,
+                'none', `#${this.pcNum}-reminder`, 'block')
             this.reminded = true;
             return true;
         }
     }
     startFlip() {
-        slide.display(`#${this.pcNum}-arrow_l`, 'none');
-        slide.display(`#${this.pcNum}-reminder`, 'none');
+        slide.display(`#${this.pcNum}-arrow_l`, 'none',
+            `#${this.pcNum}-reminder`, 'none');
         this.dom.style.transform = 'rotate(0)';
         this.flip(1);
         this.flipped = true;
@@ -374,10 +390,9 @@ for (let i = 0; i < 17; i++) {
 }
 
 const imgDiv = document.getElementById('image-loader');
-let numLoaded = 0;
 for (let i = 0; i < imgArr.length; i++) {
     const src = imgArr[i],
-    img = new Image();
+        img = new Image();
     img.src = src;
     imgDiv.appendChild(img);
 }
@@ -394,9 +409,16 @@ for (let i = 0; i < imgDiv.length; i++) {
         imgDiv[i].onload = log();
     }
 }
+let loadPrecentage = 0,
+    numLoaded = 0,
+    notLoaded,
+    loaderInt;
 const checkLoad = () => {
     const img = Array.from(document.getElementById('image-loader').children);
-    return img.map(n => n.complete)
+    notLoaded = img.filter(n => !n.complete);
+    numLoaded = 311 - notLoaded.length
+    loadPrecentage = numLoaded == 311 ? 100 : Math.floor((numLoaded / 311) * 100);
+    document.querySelector('.loading-text').innerHTML = loadPrecentage + '%';
 }
 
 const vidArr = ['images/pc5/5.mp4', 'images/pc5/6.mp4'];

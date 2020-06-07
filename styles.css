@@ -58,15 +58,22 @@ p {
     height: 100vh;
     margin: 0;
     padding: 0;
+    z-index: 9999999;
+    color: #e8968b !important;
+    background-color: white !important;
+    top: 0;
     align-items: center;
     justify-content: center;
     user-select: none;
     pointer-events: none;
+    display: none;
 }
 
 .loading-text {
-    width: 18vw;
-    height: 13vh;
+    width: 100vw;
+    text-align: center;
+    height: 100vh;
+    line-height: 100vh;
     margin: 0;
     padding: 0;
     z-index: 999;
@@ -114,11 +121,6 @@ video {
     right: 15vw;
     z-index: 99999;
     transform: rotate(-30deg);
-}
-
-.loading {
-    z-index: 9999999;
-    color: white !important;
 }
 
 :-webkit-full-screen #ff-text {
@@ -211,7 +213,6 @@ video {
 }
 
 .page,
-.loading,
 :-webkit-full-screen .fullscreen,
 .ft-reminder,
 #ff-text,
@@ -302,8 +303,7 @@ body {
     font-size: 50%;
 }
 
-.fullscreen,
-.loading-text {
+.fullscreen {
     font-size: 50%;
     text-align: center;
 }
