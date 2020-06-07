@@ -215,7 +215,7 @@ video {
 :-webkit-full-screen .fullscreen,
 .ft-reminder,
 #ff-text,
-#image-loader {
+#resource-loader {
     display: none;
 }
 
