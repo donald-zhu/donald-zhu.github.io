@@ -66,11 +66,11 @@ class Slide {
     page() {
         this.display(cp(),
             hasClass('image') ? 'flex' : 'block')
-            if (hasClass('image') && !hasClass('ft-holder')
-            && !cp().querySelector('img').getAttribute('src').includes('hiRes')) {
-                console.log('hi')
-                loading('show');
-            }
+        if (hasClass('image') && !hasClass('ft-holder') &&
+            !cp().querySelector('img').getAttribute('src').includes('hiRes')) {
+            console.log('hi')
+            loading('show');
+        }
         for (let i = 0; i < this.pgList.length; i++) {
             const page = this.pgList[i];
             if (i !== this.current &&
@@ -104,14 +104,13 @@ class Slide {
         if (siblings[siblings.length - 1].classList.contains('ft-holder')) {
             siblings.pop();
         }
-        const imgNum = siblings.findIndex(n => n === cp()) + 1,
-            src = `images/${id}/hiRes/${imgNum}.jpg`;
-        if (img.getAttribute !== src && imgNum !== 0) {
-            if (!hasClass('ft-holder')) {
-                loading('show')
-            }
-            resolution(img, src)
+        const currentSrc = img.getAttribute('src'),
+            src = currentSrc.includes('hiRes') ?
+            currentSrc : currentSrc.replace(id, `${id}/hiRes`);
+        if (!hasClass('ft-holder')) {
+            loading('show')
         }
+        resolution(img, src)
     }
     video() {
         const vid = cp().querySelector('video'),
@@ -470,6 +469,6 @@ const loadCursor = () => load(cursorArr, loadFf, 'main cursors'),
     loadFf = () => load(ffArr, loadLowRes, 'flip-throughs'),
     loadLowRes = () => load(lowResArr, loadHiRes, 'low resolution images'),
     loadHiRes = () => load(hiResArr, loadVid, 'high resolution images'),
-loadVid = () => load(videoArr, loadMisc, 'videos'),
-loadMisc  = () => load(miscArr, null, 'Misc. All resources loaded.')
+    loadVid = () => load(videoArr, loadMisc, 'videos'),
+    loadMisc = () => load(miscArr, null, 'Misc. All resources loaded.')
 loadCursor();
