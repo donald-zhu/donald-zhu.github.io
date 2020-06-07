@@ -424,6 +424,7 @@ function load(srcArr, next, message) {
         } else {
             log()
         }
+        //console.log(obj.src)
     }
 }
 const cursorArr = [
