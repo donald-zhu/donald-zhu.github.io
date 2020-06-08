@@ -310,7 +310,7 @@ class Loader {
         }
         for (let i = 0; i < 2; i++) this.essentials.splice(this.essentials.indexOf(this.cursor[i]), 1)
         this.essentials.push('cursor/next_bl.svg', 'cursor/prev_bl.svg');
-        const imgCount = [13, 1, 11, 8];
+        const imgCount = [13, 1, 11];
         for (let i = 0; i < imgCount.length; i++) {
             for (let ii = 0; ii < imgCount[i]; ii++) {
                 this.essentials.push(`images/pc${i + 1}/${ii + 1}.jpg`)
@@ -328,10 +328,10 @@ class Loader {
         }
     }
     populateOthers() {
-        const imgCount = [4, 12, 6];
+        const imgCount = [8, 4, 12, 6];
         for (let i = 0; i < imgCount.length; i++) {
             for (let ii = 0; ii < imgCount[i]; ii++) {
-                this.others.push(`images/pc${i + 5}/${ii + 1}.jpg`)
+                this.others.push(`images/pc${i + 4}/${ii + 1}.jpg`)
             }
         }
         for (let i = 0; i < 17; i++) {
