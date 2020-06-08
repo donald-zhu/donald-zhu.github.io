@@ -76,8 +76,6 @@ class Slide {
     page() {
         this.display(cp(),
             hasClass('image') ? 'flex' : 'block')
-        if (hasClass('image') && !hasClass('ft-holder') &&
-            !cp().querySelector('img').getAttribute('src').includes('hiRes')) {}
         for (let i = 0; i < this.pgList.length; i++) {
             const page = this.pgList[i];
             if (i !== this.current &&
@@ -462,7 +460,7 @@ ft.pc6.frenchFold = function () {
         const i = this.index.findIndex(elem => elem == this.currentPgNum);
         ff.setAttribute('src', `images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
     }
-    document.getElementById('ff-text').style.display = this.match() ? 'block' : 'none';
+    document.getElementById('ff-text').style.display = match() ? 'block' : 'none';
 }
 
 const evthandler = new Events();
