@@ -1,4 +1,4 @@
-//06.07.8:48PM
+//06.07.8:53PM
 document.querySelector('.fullscreen').style.display = 'none';
 class Slide {
     constructor() {
@@ -317,7 +317,7 @@ class Loader {
             }
         }
         for (let i = 0; i < 116; i++) {
-            this.essentials.push(`images/pc$1/fullbook/f${i + 1}.jpg`)
+            this.essentials.push(`images/pc1/fullbook/f${i + 1}.jpg`)
         }
         this.essentials.push(`images/pc1/fullbook/f1_hover.jpg`)
 
@@ -340,7 +340,7 @@ class Loader {
         for (let i = 0; i < 27; i++) {
             this.others.push(`images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
         }
-        this.others.push(`images/pc$6/fullbook/f1_hover.jpg`)
+        this.others.push(`images/pc6/fullbook/f1_hover.jpg`)
 
         for (let i = 0; i < 17; i++) {
             this.others.push(`pc4/${i + 1}.svg`)
