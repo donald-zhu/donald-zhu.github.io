@@ -382,7 +382,6 @@ class Loader {
     }
     enter() {
         document.body.style.pointerEvents = 'none';
-        this.populateOthers();
         this.log()
         document.querySelector('.loading-text').innerHTML = !(this.precentage == 100) ? '0%' : '';
         this.update();
@@ -391,6 +390,7 @@ class Loader {
             if (this.precentage == 100) {
                 slide.display('.loading', 'none')
                 document.body.style.pointerEvents = 'auto';
+                this.populateOthers();
                 this.preload(this.others, this.otherDiv)
                 this.videoLoad();
                 clearInterval(this.int);
