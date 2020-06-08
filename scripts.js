@@ -1,4 +1,5 @@
 document.querySelector('.fullscreen').style.display = 'none';
+
 class Slide {
     constructor() {
         this.pgList = Array.from(
