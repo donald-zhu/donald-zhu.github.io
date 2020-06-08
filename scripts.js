@@ -1,4 +1,4 @@
-//06.07.8:53PM
+//06.08 2:26AM
 document.querySelector('.fullscreen').style.display = 'none';
 class Slide {
     constructor() {
@@ -366,8 +366,8 @@ class Loader {
     update() {
         const img = Array.from(this.essDiv.children);
         this.notLoaded = img.filter(n => !n.complete);
-        this.numLoaded = 270 - this.notLoaded.length
-        this.precentage = this.numLoaded == 270 ? 100 : ((this.numLoaded / 309) * 100).toFixed(1);
+        this.numLoaded = 150 - this.notLoaded.length
+        this.precentage = this.numLoaded == 150 ? 100 : ((this.numLoaded / 150) * 100).toFixed(1);
         document.querySelector('.loading-text').innerHTML = !(this.precentage == 100) ? this.precentage + '%' : '';
     }
     videoLoad() {
