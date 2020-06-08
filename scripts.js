@@ -316,16 +316,14 @@ class Loader {
                 this.essentials.push(`images/pc${i + 1}/${ii + 1}.jpg`)
             }
         }
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
             const n = ftPc[i];
             for (let ii = 0; ii < pageAmt[i]; ii++) {
                 this.essentials.push(`images/pc${n}/fullbook/f${ii + 1}.jpg`)
             }
             this.essentials.push(`images/pc${n}/fullbook/f1_hover.jpg`)
         }
-        for (let i = 0; i < 27; i++) {
-            this.essentials.push(`images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
-        }
+        
     }
     populateOthers() {
         const imgCount = [8, 4, 12, 6];
@@ -334,6 +332,14 @@ class Loader {
                 this.others.push(`images/pc${i + 4}/${ii + 1}.jpg`)
             }
         }
+        for (let i = 0; i < 39; i++) {
+            this.others.push(`images/pc$6/fullbook/f${ii + 1}.jpg`)
+        }
+        for (let i = 0; i < 27; i++) {
+            this.others.push(`images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
+        }
+        this.others.push(`images/pc$6/fullbook/f1_hover.jpg`)
+
         for (let i = 0; i < 17; i++) {
             this.others.push(`pc4/${i + 1}.svg`)
         }
