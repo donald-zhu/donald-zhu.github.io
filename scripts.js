@@ -1,4 +1,4 @@
-//06.08 3:01AM
+//06.08 1:12PM
 document.querySelector('.fullscreen').style.display = 'none';
 class Slide {
     constructor() {
