@@ -333,7 +333,7 @@ class Loader {
             }
         }
         for (let i = 0; i < 39; i++) {
-            this.others.push(`images/pc$6/fullbook/f${ii + 1}.jpg`)
+            this.others.push(`images/pc$6/fullbook/f${i + 1}.jpg`)
         }
         for (let i = 0; i < 27; i++) {
             this.others.push(`images/pc6/fullbook/frenchFold/ff${i + 1}.jpg`)
