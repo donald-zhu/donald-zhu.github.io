@@ -359,7 +359,7 @@ class Loader {
         this.notLoaded = img.filter(n => !n.complete);
         this.numLoaded = 270 - this.notLoaded.length
         this.precentage = this.numLoaded == 270 ? 100 : ((this.numLoaded / 309) * 100).toFixed(1);
-        document.querySelector('.loading-text').innerHTML = !this.precentage == 100 ? this.precentage + '%' : '';
+        document.querySelector('.loading-text').innerHTML = !(this.precentage == 100) ? this.precentage + '%' : '';
     }
     videoLoad() {
         for (let i = 0; i < 2; i++) {
@@ -377,7 +377,7 @@ class Loader {
         document.body.style.pointerEvents = 'none';
         this.populateOthers();
         this.log()
-        document.querySelector('.loading-text').innerHTML = !this.precentage == 100 ? '0%' : '';
+        document.querySelector('.loading-text').innerHTML = !(this.precentage == 100) ? '0%' : '';
         this.update();
         this.int = setInterval(() => {
             this.update();
